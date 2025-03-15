@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Journey</title>
+    <link rel="stylesheet" href="conductor_styles.css">
+    <link rel="stylesheet" href="add_journey.css">
+    <script src="./add_journey.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div><b>Rapid Ticket Access</b></div>
+        <div>
+            <a href="conductor.html">Home</a>
+            <a href="add_journey.html">Add Journey</a>
+        </div>
+        <div class="login-signup">
+            <a href="#">Login</a>
+            <a href="#">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Journey List Container -->
+    <div class="journey-container">
+        <h3>Journeys</h3>
+        <ul id="journey-list"></ul>
+    </div>
+
+    <!-- Add Journey Section -->
+    <div class="add-journey-section">
+        <input type="text" id="new-journey" placeholder="Enter new journey (From-To)">
+        <button id="add-journey-btn">Add Journey</button>
+    </div>
+
+</body>
+</html>

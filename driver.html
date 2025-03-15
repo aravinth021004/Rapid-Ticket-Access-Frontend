@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <link rel="stylesheet" href="driver_styles.css">
+    <script src="driver_script.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div><b>Rapid Ticket Access</b></div>
+        <div>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+        </div>
+        <div class="login-signup">
+            <a href="#">Login</a>
+            <a href="#">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Driver Dashboard</h1>
+        <p>Real-time GPS & Notifications</p>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard">
+        <!-- GPS Section (Left) -->
+        <div class="gps-container">
+            <h2>Live Bus Location</h2>
+            <div class="map-container" id="map">
+                <!-- GPS Map will be embedded here -->
+            </div>
+        </div>
+
+        <!-- Notification Section (Right) -->
+        <div class="notification-container">
+            <h3>Next Stop</h3>
+            <p id="notification">No updates</p>
+        </div>
+    </div>
+
+    <a href="conductor.html" class="navigate-btn">Go to Conductor Dashboard</a>
+
+</body>
+</html>

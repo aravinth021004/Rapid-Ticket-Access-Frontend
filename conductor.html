@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conductor Dashboard</title>
+    <link rel="stylesheet" href="conductor_styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+    <script src="conductor_script.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div><b>Rapid Ticket Access</b></div>
+        <div>
+            <a href="#">Home</a>
+            <a href="add_journey.html">Add Journey</a>
+        </div>
+        <div class="login-signup">
+            <a href="#">Login</a>
+            <a href="#">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Conductor Dashboard</h1>
+        <p>Manage Passenger Count & QR Payments</p>
+        <div class="journey-container">
+            <select id="journey-route" onchange="updateJourneySelection()">
+                <option value="">Select Journey</option>
+                <option value="Location 1-Location 2">Location 1 to Location 2</option>
+                <option value="Location 2-Location 3">Location 2 to Location 3</option>
+                <option value="Location 3-Location 1">Location 3 to Location 1</option>
+            </select>
+            
+        </div>
+        <div class = "journey-button">
+               <button class="str">Start Journey</button>
+        </div>
+    </div>
+    
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-container">
+            <input type="text" id="from" placeholder="From">
+            <input type="text" id="to" placeholder="To">
+            <input type = "text" id ="to1" placeholder="No of tickets">
+            <button onclick="generateQR()">Generate Ticket</button>
+        </div>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-section">
+        <div id="qr-container">
+            <h3>Scan to Pay</h3>
+            <canvas id="qr-code"></canvas>
+        </div>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard">
+        <!-- Passenger Count Section -->
+        <div class="passenger-container">
+            <h3>Passenger Count</h3>
+            <div id="passenger-list">
+                <div class="stop-count"><span>Stop 1</span> <span id="stop1">0</span></div>
+                <div class="stop-count"><span>Stop 2</span> <span id="stop2">0</span></div>
+                <div class="stop-count"><span>Stop 3</span> <span id="stop3">0</span></div>
+            </div>
+            <div class="total-count">Total Passengers: <span id="total-passengers">0</span></div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-container">
+            <h2>Your Current Location</h2>
+            <div id="map"></div>
+        </div>
+    </div>
+    <div class="stops-container">
+        <h3>Stops</h3>
+        <ul id="stops-list"></ul>
+    </div>
+
+    <a href="driver.html" class="navigate-btn">Go to Driver Dashboard</a>
+
+</body>
+</html>
