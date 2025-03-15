@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function addStop(journeyItem) {
         const stopName = prompt("Enter stop name:");
         const distance = prompt("Enter distance from previous stop (km):");
-
+        //ashwin
         if (!stopName || isNaN(distance) || distance <= 0) {
             alert("Invalid stop details.");
             return;
