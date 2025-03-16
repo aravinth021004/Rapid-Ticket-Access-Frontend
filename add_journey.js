@@ -39,9 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const addStopBtn = document.createElement("button");
         addStopBtn.textContent = "Add Stop";
         addStopBtn.classList.add("add-stop-btn");
-        addStopBtn.onclick = function () {
-            addStop(journeyItem);
-        };
 
         // Stops Container (ul inside each journey item)
         const stopsList = document.createElement("ul");
@@ -50,15 +47,18 @@ document.addEventListener("DOMContentLoaded", function () {
         // Append elements to journey item
         journeyItem.appendChild(addStopBtn);
         journeyItem.appendChild(stopsList);
-
-        // Append journey item to journey list
         journeyList.appendChild(journeyItem);
+
+        // Attach event listener for adding stops
+        addStopBtn.addEventListener("click", function () {
+            addStop(stopsList);
+        });
 
         // Clear input field after adding
         journeyInput.value = "";
     });
 
-    function addStop(journeyItem) {
+    function addStop(stopsList) {
         const stopName = prompt("Enter stop name:");
         const distance = prompt("Enter distance from previous stop (km):");
 
@@ -71,6 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const stopItem = document.createElement("li");
         stopItem.textContent = `${stopName} - ${distance} km`;
 
-        journeyItem.querySelector(".stops-list").appendChild(stopItem);
+        stopsList.appendChild(stopItem);
     }
 });
