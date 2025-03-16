@@ -1,10 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.navbar {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.add-journey-container {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.add-journey-container input {
+    padding: 10px;
+    width: 250px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.add-journey-container button {
+    padding: 10px 15px;
+    background: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Updated .journey-container to center align */
 .journey-container {
-    top : 200px;
-    right: 450px;
+   top: 250px;
     background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 40%;
-    
+    width: 50%;  /* Adjust width */
+    max-width: 500px; /* Prevent it from becoming too wide */
+    text-align: left; /* Align text properly */
+}
+
+.journey-container h3 {
+    text-align: center; /* Center heading */
+}
+
+.journey-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.journey-container li {
+    background: #e0e0e0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-stop-btn {
+    margin-left: 10px;
+    background: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
 }
