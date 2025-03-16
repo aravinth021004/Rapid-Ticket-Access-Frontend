@@ -8,10 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Fetch journeys from backend
-    fetchJourneys();
-
-    addJourneyBtn.addEventListener("click", async function () {
+    addJourneyBtn.addEventListener("click", function () {
         const journeyText = journeyInput.value.trim();
 
         if (journeyText === "") {
@@ -19,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Splitting the input (e.g., "coimbatore-sathy" → ["coimbatore", "sathy"])
         const parts = journeyText.split("-");
         if (parts.length !== 2) {
             alert("Invalid format. Use 'From-To' format.");
@@ -33,64 +31,34 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        try {
-            const response = await fetch("http://localhost:8080/api/journeys", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ from, to })
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to add journey.");
-            }
-
-            // Add the new journey to UI
-            const journey = await response.json();
-            addJourneyToUI(journey);
-            journeyInput.value = "";
-
-        } catch (error) {
-            console.error("Error adding journey:", error);
-        }
-    });
-
-    async function fetchJourneys() {
-        try {
-            const response = await fetch("http://localhost:8080/api/journeys");
-            if (!response.ok) {
-                throw new Error("Failed to fetch journeys.");
-            }
-
-            const journeys = await response.json();
-            journeys.forEach(addJourneyToUI);
-        } catch (error) {
-            console.error("Error fetching journeys:", error);
-        }
-    }
-
-    function addJourneyToUI(journey) {
+        // Create a new journey list item
         const journeyItem = document.createElement("li");
-        journeyItem.innerHTML = `<strong>${journey.from} to ${journey.to}</strong> `;
+        journeyItem.innerHTML = `<strong>${from} to ${to}</strong> `;
 
+        // Create "Add Stop" button
         const addStopBtn = document.createElement("button");
         addStopBtn.textContent = "Add Stop";
         addStopBtn.classList.add("add-stop-btn");
 
+        // Stops Container (ul inside each journey item)
         const stopsList = document.createElement("ul");
         stopsList.classList.add("stops-list");
 
+        // Append elements to journey item
         journeyItem.appendChild(addStopBtn);
         journeyItem.appendChild(stopsList);
         journeyList.appendChild(journeyItem);
 
+        // Attach event listener for adding stops
         addStopBtn.addEventListener("click", function () {
-            addStop(journey.id, stopsList);
+            addStop(stopsList);
         });
 
-        fetchStops(journey.id, stopsList);
-    }
+        // Clear input field after adding
+        journeyInput.value = "";
+    });
 
-    async function addStop(journeyId, stopsList) {
+    function addStop(stopsList) {
         const stopName = prompt("Enter stop name:");
         const distance = prompt("Enter distance from previous stop (km):");
 
@@ -99,43 +67,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        try {
-            const response = await fetch(`http://localhost:8080/api/journeys/${journeyId}/stops`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: stopName, distance: parseFloat(distance) })
-            });
+        // Add stop to the journey
+        const stopItem = document.createElement("li");
+        stopItem.textContent = `${stopName} - ${distance} km`;
 
-            if (!response.ok) {
-                throw new Error("Failed to add stop.");
-            }
-
-            const stop = await response.json();
-            const stopItem = document.createElement("li");
-            stopItem.textContent = `${stop.name} - ${stop.distance} km`;
-            stopsList.appendChild(stopItem);
-
-        } catch (error) {
-            console.error("Error adding stop:", error);
-        }
-    }
-
-    async function fetchStops(journeyId, stopsList) {
-        try {
-            const response = await fetch(`http://localhost:8080/api/journeys/${journeyId}/stops`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch stops.");
-            }
-
-            const stops = await response.json();
-            stops.forEach(stop => {
-                const stopItem = document.createElement("li");
-                stopItem.textContent = `${stop.name} - ${stop.distance} km`;
-                stopsList.appendChild(stopItem);
-            });
-
-        } catch (error) {
-            console.error("Error fetching stops:", error);
-        }
+        stopsList.appendChild(stopItem);
     }
 });
