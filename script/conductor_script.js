@@ -96,82 +96,116 @@ function showError(error) {
             break;
     }
 }
-document.addEventListener("DOMContentLoaded", function () {
-    const journeyButton = document.querySelector(".str");
 
-    journeyButton.addEventListener("click", function () {
-        if (journeyButton.innerText === "Start Journey") {
-            journeyButton.innerText = "Stop Journey";
-            journeyButton.style.backgroundColor = "#dc3545"; // Change to red
+document.addEventListener("DOMContentLoaded", function () {
+    const journeyDropdown = document.getElementById("journey-route");
+    const fromDropdown = document.getElementById("from");
+    const toDropdown = document.getElementById("to");
+    const stopsList = document.getElementById("stops-list");
+    const startJourneyBtn = document.getElementById("start-journey-btn");
+
+    let journeys = []; // Store journeys globally
+
+    // Fetch journeys from the backend and populate the dropdown
+    function loadJourneys() {
+        fetch("http://localhost:8080/api/journey/all") // Adjust URL to match backend API
+            .then(response => response.json())
+            .then(data => {
+                journeys = data; // Store journeys globally
+                
+                journeyDropdown.innerHTML = `<option value="">Select Journey</option>`; // Reset dropdown
+                
+                data.forEach(journey => {
+                    const option = document.createElement("option");
+                    option.value = journey.id; // Store journey ID as value
+                    option.textContent = `${journey.startPlace} → ${journey.endPlace}`;
+                    journeyDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching journeys:", error));
+    }
+
+    startJourneyBtn.addEventListener("click", function () {
+        const selectedJourneyId = journeyDropdown.value;
+
+        if (!selectedJourneyId) {
+            alert("Please select a valid journey.");
+            return;
+        }
+
+        if (startJourneyBtn.textContent === "Start Journey") {
+            fetchStops(selectedJourneyId);
         } else {
-            journeyButton.innerText = "Start Journey";
-            journeyButton.style.backgroundColor = "#28a745"; // Change back to green
+            // Stop Journey logic
+            updateStopsList([]);
+            updateFromToDropdowns([]);
+            journeyDropdown.value = "";
+            startJourneyBtn.textContent = "Start Journey";
         }
     });
-});
-document.addEventListener("DOMContentLoaded", () => {
-    fetchStops();
-});
 
-// async function fetchStops() {
-//     try {
-//         const response = await fetch("http://your-backend-url/api/stops"); // Replace with your actual backend API URL
-//         if (!response.ok) {
-//             throw new Error("Failed to fetch stops");
-//         }
-//         const stops = await response.json();
-//         updateStopsList(stops);
-//     } catch (error) {
-//         console.error("Error fetching stops:", error);
-//     }
-// }
+    // Function to fetch stops from backend
+    async function fetchStops(journeyId) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/stops/getStops/${journeyId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const stops = await response.json();
+            
+            // Transform the response into the format needed for dropdowns
+            const formattedStops = stops.map(stop => ({
+                name: stop.currentStop,  // Using currentStop as name
+                distance: stop.distanceFromStart
+            }));
+    
+            console.log("Fetched stops:", formattedStops); // Debugging log
+    
+            updateStopsList(formattedStops);
+            updateFromToDropdowns(formattedStops);
+            startJourneyBtn.textContent = "Stop Journey";
+        } catch (error) {
+            console.error("Error fetching stops:", error);
+            alert("Failed to load stops. Please try again.");
+        }
+    }
+        
 
-// function updateStopsList(stops) {
-//     const stopsList = document.getElementById("stops-list");
-//     stopsList.innerHTML = ""; // Clear existing stops before updating
+    // Function to update the stops list in the UI
+    function updateStopsList(stops) {
+        stopsList.innerHTML = ""; // Clear previous stops
 
-//     if (stops.length === 0) {
-//         stopsList.innerHTML = "<li>No stops available</li>";
-//         return;
-//     }
+        if (!stops || stops.length === 0) {
+            stopsList.innerHTML = "<li>No stops available</li>";
+            return;
+        }
 
-//     stops.forEach(stop => {
-//         const li = document.createElement("li");
-//         li.textContent = stop.name; // Assuming backend returns { name: "Stop 1" }
-//         stopsList.appendChild(li);
-//     });
-// }
-// Function to add a new journey dynamically
-function addJourney() {
-    let newJourneyInput = document.getElementById("new-journey");
-    let newJourney = newJourneyInput.value.trim();
-
-    if (newJourney === "") {
-        alert("Please enter a valid journey.");
-        return;
+        stops.forEach(stop => {
+            const li = document.createElement("li");
+            li.textContent = `${stop.name}`;
+            stopsList.appendChild(li);
+        });
     }
 
-    let journeyDropdown = document.getElementById("journey-route");
+    // Function to update "From" and "To" dropdowns
+    function updateFromToDropdowns(stops) {
+        fromDropdown.innerHTML = '<option value="">From</option>';
+        toDropdown.innerHTML = '<option value="">To</option>';
 
-    // Check if the journey already exists
-    let exists = Array.from(journeyDropdown.options).some(option => option.value === newJourney);
-    if (exists) {
-        alert("Journey already exists!");
-        return;
+        stops.forEach(stop => {
+            const fromOption = document.createElement("option");
+            fromOption.value = stop.name;
+            fromOption.textContent = stop.name;
+            fromDropdown.appendChild(fromOption);
+
+            const toOption = document.createElement("option");
+            toOption.value = stop.name;
+            toOption.textContent = stop.name;
+            toDropdown.appendChild(toOption);
+        });
     }
 
-    // Create new option and add to dropdown
-    let newOption = document.createElement("option");
-    newOption.value = newJourney;
-    newOption.textContent = newJourney;
-    journeyDropdown.appendChild(newOption);
-
-    // Clear input field
-    newJourneyInput.value = "";
-}
-
-
-
-
-// Call initMap() when the page loads
-window.onload = initMap;
+    // Load journeys on page load
+    loadJourneys();
+});

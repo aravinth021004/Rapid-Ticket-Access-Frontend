@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     const journeyList = document.getElementById("journey-list");
     const addJourneyBtn = document.getElementById("add-journey-btn");
-    const journeyInput = document.getElementById("new-journey");
+    const fromInput = document.getElementById("from");
+    const toInput = document.getElementById("to");
 
     if (!journeyList) {
         console.error("Element with ID 'journey-list' not found.");
@@ -38,21 +39,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to Add a New Journey
     addJourneyBtn.addEventListener("click", function () {
-        const journeyText = journeyInput.value.trim();
 
-        if (journeyText === "") {
-            alert("Please enter a valid journey.");
+        const from = fromInput.value.trim();
+        const to = toInput.value.trim();
+
+        if (from === "" || to === "") {
+            alert("Please enter both 'From' and 'To' fields.");
             return;
         }
-
-        const parts = journeyText.split("-");
-        if (parts.length !== 2) {
-            alert("Invalid format. Use 'From-To' format.");
-            return;
-        }
-
-        const from = parts[0].trim();
-        const to = parts[1].trim();
 
         if (!from || !to) {
             alert("Both 'From' and 'To' fields must be filled.");
@@ -69,7 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(() => {
-            journeyInput.value = ""; // Clear input
+            fromInput.value = "" // Clear fromInput
+            toInput.value = "" // Clear toInput
             fetchJourneys(); // Refresh journey list
         })
         .catch(error => console.error("Error adding journey:", error));
