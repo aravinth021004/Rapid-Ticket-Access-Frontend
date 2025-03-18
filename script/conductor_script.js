@@ -1,23 +1,46 @@
-conductor_script.js
 // QR Code Generation
 function generateQR() {
-    let from = document.getElementById("from").value;
-    let to = document.getElementById("to").value;
+    let source = document.getElementById("source").value;
+    let destination = document.getElementById("destination").value;
+    let numberOfPassengers = document.getElementById("numberOfPassengers").value;
 
-    if (!from || !to) {
+    if (!source || !destination || !numberOfPassengers) {
         alert("Please fill all fields!");
         return;
     }
 
-    let qrData = `From: ${from}, To: ${to}`;
-    new QRious({
-        element: document.getElementById("qr-code"),
-        value: qrData,
-        size: 200
-    });
+    fetch("http://localhost:8080/api/tickets/generate/TestMode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            source: source,
+            destination: destination,
+            numberOfPassengers: parseInt(numberOfPassengers) || 1
+        })
+    })
+    .then(response => response.text()) // Expect plain text response (URL)
+    .then(paymentUrl => {
+        console.log("Payment URL:", paymentUrl);
 
-    document.getElementById("qr-container").style.display = "block";
+        // Clear previous QR code
+        document.getElementById("qr-code").innerHTML = "";
+
+        // Generate the QR code with the payment URL
+        let qr = new QRious({
+            element: document.getElementById("qr-code"),
+            value: paymentUrl,
+            size: 200
+        });
+
+        // Make QR Code section visible
+        document.getElementById("qr-container").style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred: " + error.message);
+    });
 }
+
 
 // Passenger Count Update
 function updatePassengerCount(stop, count) {
@@ -90,34 +113,34 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchStops();
 });
 
-async function fetchStops() {
-    try {
-        const response = await fetch("http://your-backend-url/api/stops"); // Replace with your actual backend API URL
-        if (!response.ok) {
-            throw new Error("Failed to fetch stops");
-        }
-        const stops = await response.json();
-        updateStopsList(stops);
-    } catch (error) {
-        console.error("Error fetching stops:", error);
-    }
-}
+// async function fetchStops() {
+//     try {
+//         const response = await fetch("http://your-backend-url/api/stops"); // Replace with your actual backend API URL
+//         if (!response.ok) {
+//             throw new Error("Failed to fetch stops");
+//         }
+//         const stops = await response.json();
+//         updateStopsList(stops);
+//     } catch (error) {
+//         console.error("Error fetching stops:", error);
+//     }
+// }
 
-function updateStopsList(stops) {
-    const stopsList = document.getElementById("stops-list");
-    stopsList.innerHTML = ""; // Clear existing stops before updating
+// function updateStopsList(stops) {
+//     const stopsList = document.getElementById("stops-list");
+//     stopsList.innerHTML = ""; // Clear existing stops before updating
 
-    if (stops.length === 0) {
-        stopsList.innerHTML = "<li>No stops available</li>";
-        return;
-    }
+//     if (stops.length === 0) {
+//         stopsList.innerHTML = "<li>No stops available</li>";
+//         return;
+//     }
 
-    stops.forEach(stop => {
-        const li = document.createElement("li");
-        li.textContent = stop.name; // Assuming backend returns { name: "Stop 1" }
-        stopsList.appendChild(li);
-    });
-}
+//     stops.forEach(stop => {
+//         const li = document.createElement("li");
+//         li.textContent = stop.name; // Assuming backend returns { name: "Stop 1" }
+//         stopsList.appendChild(li);
+//     });
+// }
 // Function to add a new journey dynamically
 function addJourney() {
     let newJourneyInput = document.getElementById("new-journey");

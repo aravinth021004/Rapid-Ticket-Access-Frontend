@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conductor Dashboard</title>
-    <link rel="stylesheet" href="conductor_styles.css">
+    <link rel="stylesheet" href="/rapid-ticket-access/css/conductor_styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
-    <script src="conductor_script.js" defer></script>
+    <script src="/rapid-ticket-access/script/conductor_script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 </head>
 <body>
 
@@ -16,7 +18,7 @@
         <div><b>Rapid Ticket Access</b></div>
         <div>
             <a href="#">Home</a>
-            <a href="add_journey.html">Add Journey</a>
+            <a href="/rapid-ticket-access/Dashboard/add_journey.html">Add Journey</a>
         </div>
         <div class="login-signup">
             <a href="#">Login</a>
@@ -29,26 +31,28 @@
         <h1>Conductor Dashboard</h1>
         <p>Manage Passenger Count & QR Payments</p>
         <div class="journey-container">
-            <select id="journey-route" onchange="updateJourneySelection()">
+            <select id="journey-route">
                 <option value="">Select Journey</option>
-                <option value="Location 1-Location 2">Location 1 to Location 2</option>
-                <option value="Location 2-Location 3">Location 2 to Location 3</option>
-                <option value="Location 3-Location 1">Location 3 to Location 1</option>
+                <!-- Journeys will be dynamically populated from JavaScript -->
             </select>
-            
-        </div>
-        <div class = "journey-button">
-               <button class="str">Start Journey</button>
+            <div class="journey-button">
+                <button id="start-journey-btn">Start Journey</button>
+            </div>
         </div>
     </div>
-    
 
     <!-- Search Section -->
     <div class="search-section">
         <div class="search-container">
-            <input type="text" id="from" placeholder="From">
-            <input type="text" id="to" placeholder="To">
-            <input type = "text" id ="to1" placeholder="No of tickets">
+            <select id="from">
+                <option value="">From</option>
+                <!-- "From" options will be dynamically populated from JavaScript -->
+            </select>
+            <select id="to">
+                <option value="">To</option>
+                <!-- "To" options will be dynamically populated from JavaScript -->
+            </select>
+            <input type="text" id="to1" placeholder="No of tickets">
             <button onclick="generateQR()">Generate Ticket</button>
         </div>
     </div>
@@ -74,15 +78,13 @@
             <div class="total-count">Total Passengers: <span id="total-passengers">0</span></div>
         </div>
 
-        <!-- Map Section -->
-        <div class="map-container">
-            <h2>Your Current Location</h2>
-            <div id="map"></div>
+        <!-- Stops Section -->
+        <div class="stops-container">
+            <h3>Stops</h3>
+            <ul id="stops-list">
+                <li>No stops available</li>
+            </ul>
         </div>
-    </div>
-    <div class="stops-container">
-        <h3>Stops</h3>
-        <ul id="stops-list"></ul>
     </div>
 
     <a href="driver.html" class="navigate-btn">Go to Driver Dashboard</a>
