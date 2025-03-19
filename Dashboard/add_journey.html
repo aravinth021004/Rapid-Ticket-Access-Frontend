@@ -36,5 +36,22 @@
             <ul id="journey-list"></ul>
         </div>
 
+        <!-- Stops Container -->
+    <div class="stops-container">
+        <h3>Stops for Selected Journey</h3>
+        <button id="add-stop-btn" style="display: none;">Add Stop</button>
+        <ul id="selected-journey-stops"></ul>
+
+        <!-- Popup container for adding stops -->
+        <div id="add-stop-popup" class="popup-container">
+            <label for="stop-name">Stop Name:</label>
+            <input type="text" id="stop-name" placeholder="Enter stop name">
+            <label for="stop-distance">Distance (km):</label>
+            <input type="number" id="stop-distance" placeholder="Enter distance">
+            <button id="save-stop-btn">Save</button>
+            <button id="cancel-stop-btn">Cancel</button>
+        </div>
+    </div>
+
     </body>
     </html>
