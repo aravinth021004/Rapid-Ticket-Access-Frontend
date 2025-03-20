@@ -1,8 +1,10 @@
 // QR Code Generation
 function generateQR() {
-    let source = document.getElementById("source").value;
-    let destination = document.getElementById("destination").value;
+    let source = document.getElementById("from").value;
+    let destination = document.getElementById("to").value;
     let numberOfPassengers = document.getElementById("numberOfPassengers").value;
+    let journeyDropdown = document.getElementById("journey-route");
+    let selectedJourneyId = journeyDropdown.value;
 
     if (!source || !destination || !numberOfPassengers) {
         alert("Please fill all fields!");
@@ -13,6 +15,7 @@ function generateQR() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+            journeyId : selectedJourneyId,
             source: source,
             destination: destination,
             numberOfPassengers: parseInt(numberOfPassengers) || 1

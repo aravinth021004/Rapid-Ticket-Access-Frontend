@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Transform the response into the format needed for dropdowns
             const formattedStops = stops.map(stop => ({
+                id: stop.id,
                 name: stop.currentStop,  // Using currentStop as name
                 distance: stop.distanceFromStart
             }));
