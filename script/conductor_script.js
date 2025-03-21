@@ -106,6 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const toDropdown = document.getElementById("to");
     const stopsList = document.getElementById("stops-list");
     const startJourneyBtn = document.getElementById("start-journey-btn");
+    const currentStopBtn = document.getElementById("current-stop-btn");
+
+    let selectedStop = null; // Track the currently selected stop
 
     let journeys = []; // Store journeys globally
 
@@ -144,6 +147,11 @@ document.addEventListener("DOMContentLoaded", function () {
             updateFromToDropdowns([]);
             journeyDropdown.value = "";
             startJourneyBtn.textContent = "Start Journey";
+
+            // Reset the "Current Stop" button and selected stop
+            currentStopBtn.disabled = true;
+            selectedStop = null;
+
         }
     });
 
@@ -187,6 +195,22 @@ document.addEventListener("DOMContentLoaded", function () {
         stops.forEach(stop => {
             const li = document.createElement("li");
             li.textContent = `${stop.name}`;
+
+            // Add a click event listener to select the stop
+            li.addEventListener("click", () => {
+                // Deselect all stops
+                const allStops = stopsList.querySelectorAll("li");
+                allStops.forEach(stopLi => stopLi.classList.remove("selected"));
+
+                // Select the clicked stop
+                li.classList.add("selected");
+                selectedStop = stop.name;
+
+                // Enable the "Current Stop" button
+                currentStopBtn.disabled = false;
+            });
+
+            // Append the list item to the stops list
             stopsList.appendChild(li);
         });
     }
@@ -208,6 +232,25 @@ document.addEventListener("DOMContentLoaded", function () {
             toDropdown.appendChild(toOption);
         });
     }
+
+    // Event listener for the "Current Stop" button
+    currentStopBtn.addEventListener("click", () => {
+        if (selectedStop) {
+            // Mark the selected stop as completed
+            const selectedLi = stopsList.querySelector(".selected");
+            if (selectedLi) {
+                selectedLi.classList.add("completed");
+                selectedLi.classList.remove("selected");
+                selectedLi.style.textDecoration = "line-through"; // Optional: Add a visual indicator
+                selectedLi.style.color = "gray"; // Optional: Change the color
+                alert(`Stop "${selectedStop}" has been marked as completed.`);
+            }
+
+            // Reset the selected stop and disable the button
+            selectedStop = null;
+            currentStopBtn.disabled = true;
+        }
+    });
 
     // Load journeys on page load
     loadJourneys();
