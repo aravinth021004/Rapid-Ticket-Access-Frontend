@@ -11,6 +11,9 @@ function generateQR() {
         return;
     }
 
+
+    // Generate ticket for the passenger
+
     fetch("http://localhost:8080/api/tickets/generate/TestMode", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,17 +45,79 @@ function generateQR() {
         console.error("Error:", error);
         alert("An error occurred: " + error.message);
     });
+
+
+    updatePassengerCount(destination, numberOfPassengers);
+
+
 }
 
 
-// Passenger Count Update
-function updatePassengerCount(stop, count) {
-    document.getElementById(stop).innerText = count;
-    let total = parseInt(document.getElementById("stop1").innerText) +
-                parseInt(document.getElementById("stop2").innerText) +
-                parseInt(document.getElementById("stop3").innerText);
-    document.getElementById("total-passengers").innerText = total;
+// Set the passenger count section with the stops
+function setPassengerCount(formattedStops) {
+    const passengerList = document.getElementById("passenger-list");
+    const totalCounter = document.getElementById("total-passengers");
+
+    formattedStops.forEach((stop, index) => {
+        let stopElement = passengerList.querySelector(`#stop-${stop.name}`);
+        if (!stopElement) {
+            stopElement = document.createElement("div");
+            stopElement.classList.add("stop-count");
+            stopElement.innerHTML = `<span>${stop.name} </span> <span id="stop-${stop.name}">0</span>`;
+            passengerList.appendChild(stopElement);
+
+        }
+    });
+
+
+
 }
+
+// Update the passenger count section dynamically
+function updatePassengerCount(destination, count) {
+    const passengerList = document.getElementById("passenger-list");
+    const currentCounter = document.getElementById("current-passengers");
+    const totalCounter = document.getElementById("total-passengers");
+    let totalPassengers = parseInt(totalCounter.textContent) || 0;
+    let currentPassengers = parseInt(currentCounter.textContent) || 0;
+
+    fetch(`http://localhost:8080/api/currentJourney/updatePassengerCount`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            destination: destination,
+            numberOfPassengers: count
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to update passenger count");
+        }
+        return response.json();
+    })
+    .then(data => {
+        const { newCount, currentStopCount, totalCount } = data;
+    
+        const countSpan = document.querySelector(`#stop-${destination}`);
+        if (countSpan) {
+            countSpan.textContent = newCount;
+        }
+    
+        totalCounter.textContent = totalCount;
+        currentCounter.textContent = currentStopCount;
+    
+        console.log(`Updated ${destination}: ${newCount}, Current: ${currentStopCount}, Total: ${totalCount}`);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred: " + error.message);
+    });
+    
+    
+}
+
 
 // Google Maps Integration
 let map;
@@ -114,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fetch journeys from the backend and populate the dropdown
     function loadJourneys() {
-        fetch("http://localhost:8080/api/journey/all") // Adjust URL to match backend API
+        fetch("http://localhost:8080/api/journey/all")
             .then(response => response.json())
             .then(data => {
                 journeys = data; // Store journeys globally
@@ -132,17 +197,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     startJourneyBtn.addEventListener("click", function () {
+        console.log("Start Journey button clicked");
         const selectedJourneyId = journeyDropdown.value;
-
+          
         if (!selectedJourneyId) {
             alert("Please select a valid journey.");
             return;
         }
 
         if (startJourneyBtn.textContent === "Start Journey") {
+            startJourney(selectedJourneyId);
             fetchStops(selectedJourneyId);
         } else {
             // Stop Journey logic
+            stopJourney();
             updateStopsList([]);
             updateFromToDropdowns([]);
             journeyDropdown.value = "";
@@ -154,6 +222,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     });
+
+    function startJourney(journeyId) {
+        
+        fetch('http://localhost:8080/api/currentJourney/startJourney', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                journeyId
+            ) 
+          })
+          .then(response => response.text())
+          .then(data => {
+            console.log("Response from backend:", data);
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          });
+          
+    }
+
+    function stopJourney() {
+        fetch('http://localhost:8080/api/currentJourney/stopJourney', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify("Journey stopped successfully") 
+          })
+          .then(response => response.text())
+          .then(data => {
+            console.log("Response from backend:", data);
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          });
+          
+    }
 
     // Function to fetch stops from backend
     async function fetchStops(journeyId) {
@@ -175,6 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             updateStopsList(formattedStops);
             updateFromToDropdowns(formattedStops);
+            setPassengerCount(formattedStops);
             startJourneyBtn.textContent = "Stop Journey";
         } catch (error) {
             console.error("Error fetching stops:", error);
