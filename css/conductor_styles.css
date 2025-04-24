@@ -89,7 +89,6 @@ body {
     cursor: pointer;
 }
 
-
 /* Base button styling */
 #start-journey-btn {
     padding: 10px 20px;
@@ -334,4 +333,41 @@ body {
     .map-container {
         width: 90%;
     }
+}
+
+/* Selected Stop */
+#stops-list li.selected {
+    background-color: #e0f7fa; /* Light blue background for selected stop */
+    font-weight: bold;
+}
+
+/* Completed Stop */
+#stops-list li.completed {
+    text-decoration: line-through; /* Strike-through text */
+    color: white; /* White text for better contrast */
+    background-color: red; /* Red background for completed stops */
+    pointer-events: none; /* Disable further clicks */
+    border: 1px solid darkred; /* Optional: Add a border for better visibility */
+}
+
+/* Current Stop Button */
+#current-stop-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#current-stop-btn:hover {
+    background-color: #0056b3;
+}
+
+#current-stop-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }

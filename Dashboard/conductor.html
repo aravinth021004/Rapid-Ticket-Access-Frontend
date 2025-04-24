@@ -6,7 +6,7 @@
     <title>Conductor Dashboard</title>
     <link rel="stylesheet" href="/rapid-ticket-access/css/conductor_styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script> -->
     <script src="/rapid-ticket-access/script/conductor_script.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -52,7 +52,7 @@
                 <option value="">To</option>
                 <!-- "To" options will be dynamically populated from JavaScript -->
             </select>
-            <input type="text" id="to1" placeholder="No of tickets">
+            <input type="text" id="numberOfPassengers" placeholder="No of tickets">
             <button onclick="generateQR()">Generate Ticket</button>
         </div>
     </div>
@@ -71,10 +71,9 @@
         <div class="passenger-container">
             <h3>Passenger Count</h3>
             <div id="passenger-list">
-                <div class="stop-count"><span>Stop 1</span> <span id="stop1">0</span></div>
-                <div class="stop-count"><span>Stop 2</span> <span id="stop2">0</span></div>
-                <div class="stop-count"><span>Stop 3</span> <span id="stop3">0</span></div>
+                <div class="stop-count"> <!-- Stop count will be added dynamically --> </div>
             </div>
+            <div class="current-count">Current Passengers: <span id="current-passengers">0</span></div>
             <div class="total-count">Total Passengers: <span id="total-passengers">0</span></div>
         </div>
 
@@ -84,10 +83,12 @@
             <ul id="stops-list">
                 <li>No stops available</li>
             </ul>
+            <!-- Add the "Current Stop" button -->
+            <button id="current-stop-btn" disabled>Current Stop</button>
         </div>
     </div>
 
-    <a href="driver.html" class="navigate-btn">Go to Driver Dashboard</a>
+    <a href="/rapid-ticket-access/Dashboard/driver.html" class="navigate-btn">Go to Driver Dashboard</a>
 
 </body>
 </html>

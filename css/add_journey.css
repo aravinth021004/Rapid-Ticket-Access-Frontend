@@ -1,9 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #ebe5e5;
     margin: 0;
     padding: 0;
     text-align: center;
+
 }
 
 .navbar {
@@ -58,7 +59,7 @@ body {
 /* Updated .journey-container to center align */
 .journey-container {
    top: 250px;
-   right: 500px;
+   left: 100px;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -95,4 +96,98 @@ body {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+}
+/* Add this CSS to align and style the stops container */
+/* Add this CSS to align and style the stops container */
+.stops-container {
+    top:370px;
+    right: 300px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 50%;  /* Adjust width */
+    max-width: 500px; /* Prevent it from becoming too wide */
+    text-align: left; /* Align text properly */
+    margin: 20px auto; /* Center the container horizontally */
+    height: 300px; /* Fixed height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.stops-container h3 {
+    text-align: center; /* Center heading */
+    margin-top: 0; /* Remove default margin for better alignment */
+}
+
+.stops-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; /* Remove default margin */
+}
+
+.stops-container li {
+    background: #e0e0e0;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* If you have buttons inside the stops container, style them similarly */
+.stops-container button {
+    margin-left: 10px;
+    background: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.stops-container button:hover {
+    background: darkgreen;
+}
+
+
+.popup-container {
+    display: none;
+    position: absolute; /* Position relative to the stops container */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for exact centering */
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    border-radius: 8px;
+    width: 300px; /* Set a fixed width for the popup */
+}
+
+.popup-container input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.popup-container button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.popup-container button#save-stop-btn {
+    background: green;
+    color: white;
+}
+
+.popup-container button#cancel-stop-btn {
+    background: red;
+    color: white;
 }
