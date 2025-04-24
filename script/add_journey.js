@@ -170,6 +170,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+    // Add new Journey
+    addJourneyBtn.addEventListener("click",
+        function () {
+            const from = fromInput.value.trim();
+            const to = toInput.value.trim();
+
+            if (from === "" || to === "") {
+                alert("Please enter both 'From' and 'To' fields.");
+                return;
+            }
+
+            if (!from || !to) {
+                alert("Both 'From' and 'To' fields must be filled.");
+                return;
+            }
+
+            const newJourney = {startPlace: from, endPlace: to};
+
+            // Send journey to backend
+            fetch("http://localhost:8080/api/journey/create", {
+                method: "POST",
+                headers: {"Content-Type" : "application/json"},
+                body: JSON.stringify(newJourney),
+            })
+            .then(response => response.json())
+            .then(() => {
+                fromInput.value = "" // Clear fromInput
+                toInput.value = "" // Clear fromOutput
+
+                fetchJourneys(); // Refresh journey list
+            })
+            .catch(error => console.error("Error adding journey:", error));
+        }
+    );
+
     // Modify Journey
     function modifyJourney(journeyId, updatedJourneyData) {
         fetch(`http://localhost:8080/api/journey/modify/${journeyId}`, {
