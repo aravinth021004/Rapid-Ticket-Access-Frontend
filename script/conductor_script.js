@@ -344,6 +344,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener for the "Current Stop" button
     currentStopBtn.addEventListener("click", () => {
         if (selectedStop) {
+            // console.log(selectedStop);
+            
+            // Update the current stop count after reaching the stop
+            updateCurrentStopCount(selectedStop);
+
+
             // Mark the selected stop as completed
             const selectedLi = stopsList.querySelector(".selected");
             if (selectedLi) {
@@ -360,6 +366,109 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Update the current stop count
+
+    function updateCurrentStopCount(stopName) {
+        const currentCounter = document.getElementById("current-passengers");
+        fetch(`http://localhost:8080/api/currentJourney/stop/${stopName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const currentStopCount = data;
+            currentCounter.textContent = currentStopCount;
+        })
+        .catch(error => console.error("Error updating current stop count: " + error));
+        
+    }
+
+    document.getElementById('payment-mode-btn').addEventListener('click', function() {
+        generateQRCode('payment');
+    });
+    
+    document.getElementById('test-mode-btn').addEventListener('click', function() {
+        generateQRCode('test');
+    });
+
     // Load journeys on page load
     loadJourneys();
 });
+
+
+function openModeSelection() {
+    document.getElementById('mode-selection-modal').style.display = 'flex';
+}
+
+function closeModeSelection() {
+    document.getElementById('mode-selection-modal').style.display = 'none';
+}
+
+function generateQRCode(mode) {
+    closeModeSelection();
+    
+    let source = document.getElementById("from").value;
+    let destination = document.getElementById("to").value;
+    let numberOfPassengers = document.getElementById("numberOfPassengers").value;
+    let journeyDropdown = document.getElementById("journey-route");
+    let selectedJourneyId = journeyDropdown.value;
+
+    if (!source || !destination || !numberOfPassengers) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+
+    // Generate ticket for the passenger
+
+    fetch("http://localhost:8080/api/tickets/generate/TestMode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            journeyId : selectedJourneyId,
+            source: source,
+            destination: destination,
+            numberOfPassengers: parseInt(numberOfPassengers) || 1
+        })
+    })
+    .then(response => response.text()) // Expect plain text response (URL)
+    .then(paymentUrl => {
+        console.log("Payment URL:", paymentUrl);
+
+        // Generate QR code
+    try {
+        // Clear previous QR code if any
+        const canvas = document.getElementById('modal-qr-code');
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Generate new QR code
+        let qr = new QRious({
+            element: document.getElementById("qr-code"),
+            value: paymentUrl,
+            size: 200
+        });
+        
+        // Show the QR modal
+        document.getElementById('qr-modal').style.display = 'flex';
+    } catch (error) {
+        console.error("Error generating QR code:", error);
+        alert("Failed to generate QR code. Please try again.");
+    }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred: " + error.message);
+    });
+
+
+    updatePassengerCount(destination, numberOfPassengers);
+
+    
+}
+
+function closeQRModal() {
+    document.getElementById('qr-modal').style.display = 'none';
+}

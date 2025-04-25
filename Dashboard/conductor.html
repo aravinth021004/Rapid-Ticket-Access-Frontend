@@ -53,7 +53,7 @@
                 <!-- "To" options will be dynamically populated from JavaScript -->
             </select>
             <input type="text" id="numberOfPassengers" placeholder="No of tickets">
-            <button onclick="generateQR()">Generate Ticket</button>
+            <button onclick="openModeSelection()">Generate Ticket</button>
         </div>
     </div>
 
@@ -65,6 +65,7 @@
         </div>
     </div>
 
+
     <!-- Dashboard Layout -->
     <div class="dashboard">
         <!-- Passenger Count Section -->
@@ -73,7 +74,7 @@
             <div id="passenger-list">
                 <div class="stop-count"> <!-- Stop count will be added dynamically --> </div>
             </div>
-            <div class="current-count">Current Passengers: <span id="current-passengers">0</span></div>
+            <div class="total-count">Current Passengers: <span id="current-passengers">0</span></div>
             <div class="total-count">Total Passengers: <span id="total-passengers">0</span></div>
         </div>
 
@@ -89,6 +90,29 @@
     </div>
 
     <a href="/rapid-ticket-access/Dashboard/driver.html" class="navigate-btn">Go to Driver Dashboard</a>
+
+        <!-- Modal for mode selection -->
+        <div id="mode-selection-modal" class="modal-overlay">
+            <div class="modal-container">
+                <h2>Select Payment Mode</h2>
+                <div class="mode-buttons">
+                    <button id="payment-mode-btn">Payment Mode</button>
+                    <button id="test-mode-btn">Test Mode</button>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Modal for QR code display -->
+        <div id="qr-modal" class="modal-overlay">
+            <div class="modal-container">
+                <div class="qr-modal-container">
+                    <h1>Pay For Ticket</h1>
+                    <canvas id="modal-qr-code"></canvas>
+                    <button class="close-modal" onclick="closeQRModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    
 
 </body>
 </html>
